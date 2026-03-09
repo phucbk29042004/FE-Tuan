@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samsung AHP — Hệ thống hỗ trợ lựa chọn điện thoại</title>
+    <meta name="description" content="Sử dụng phương pháp AHP để tìm chiếc Samsung phù hợp nhất với bạn" />
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1A3DBE',
+                        'primary-dark': '#1230a0',
+                        'primary-light': '#EEF2FF',
+                        secondary: '#4f72f5',
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="index.css" />
+</head>
+
+<body class="bg-white text-slate-900 font-sans antialiased">
+
+    <!-- ═══════════════════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════════════════ -->
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-2.5 flex-shrink-0">
+                <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center text-white flex-shrink-0">
+                    <span class="material-symbols-outlined" style="font-size:20px;">smartphone</span>
+                </div>
+                <span class="text-lg font-bold text-primary tracking-tight">Samsung AHP</span>
+            </div>
+
+            <!-- Nav — flex-1 + justify-center để căn giữa màn hình -->
+            <nav class="hidden md:flex flex-1 items-center justify-center gap-8">
+                <a href="#" class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors">Trang
+                    chủ</a>
+                <a href="#intro" class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors">Giới
+                    thiệu AHP</a>
+                <a href="#process" class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors">Quy
+                    trình</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════ -->
+    <section class="bg-slate-50 py-20 lg:py-28 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 items-center gap-14">
+
+                <!-- Left -->
+                <div class="flex flex-col gap-6">
+                    <!-- Badge -->
+                    <span
+                        class="inline-flex w-fit items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary-light text-primary text-xs font-bold tracking-wide uppercase">
+                        Decision Support System
+                    </span>
+
+                    <!-- Headline -->
+                    <h1 class="text-5xl lg:text-6xl font-black leading-tight text-slate-900 tracking-tight">
+                        Hệ thống hỗ trợ lựa<br />
+                        chọn điện thoại<br />
+                        <span class="text-primary">Samsung</span> bằng<br />
+                        phương pháp <span class="text-primary">AHP</span>
+                    </h1>
+
+                    <!-- Description -->
+                    <p class="text-base text-slate-500 leading-relaxed max-w-md">
+                        Sử dụng thuật toán Phân tích Thứ bậc (AHP) để tìm ra chiếc điện thoại phù hợp nhất với nhu cầu
+                        và ngân sách của bạn một cách khoa học và khách quan.
+                    </p>
+
+                    <!-- Buttons -->
+                    <div class="flex flex-wrap gap-3 mt-2">
+                        <button onclick="openModal()"
+                            class="flex items-center gap-2 bg-primary text-white font-bold px-7 py-3.5 rounded-xl hover:bg-primary-dark transition-all shadow-lg shadow-primary/25 active:scale-95">
+                            <span class="material-symbols-outlined" style="font-size:20px;">analytics</span>
+                            Bắt đầu đánh giá
+                        </button>
+                        <button
+                            class="flex items-center gap-2 border-2 border-slate-200 text-slate-700 font-bold px-7 py-3.5 rounded-xl hover:border-primary hover:text-primary transition-all">
+                            Tìm hiểu thêm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right — phone on dark bg -->
+                <div class="relative flex justify-center lg:justify-end">
+                    <div class="w-full max-w-md aspect-[4/3] bg-slate-900 rounded-3xl overflow-hidden shadow-2xl">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBVUDlDyGxJ3iaOvxHfGL92xqFpXOJGc-YY_M22Q01uyCs3eQ7mJCns_OXMT5SD5N3eyt9fhFVuyw0-e9B8et_9AUDNtCjRUuxbuhkKk2myEkUX-ZHAIljrQlT7ITEsqxIJHCbWQcF6dVtQY4kiHAzLlIUTIE-Q71cM_1QmqptQuQpn8pGHBcz8HZ9qhaLkU6PJK9iZe1MZkYky5r6fads3r25rVWTv9n2Junf4b7gafk3Tlv-t_tKa1k6lHp9Ri3NkyoQ_qfbR0Y"
+                            alt="Samsung Galaxy phones" class="w-full h-full object-cover opacity-90" />
+                    </div>
+                    <!-- Decorative blurs -->
+                    <div
+                        class="absolute -bottom-8 -left-8 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute -top-4 -right-4 w-32 h-32 bg-secondary/10 rounded-full blur-2xl pointer-events-none">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     CRITERIA
+═══════════════════════════════════════════════════════════ -->
+    <section class="bg-white py-20" id="intro">
+        <div class="max-w-7xl mx-auto px-6">
+
+            <!-- Heading -->
+            <div class="text-center mb-14">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Tiêu chí đánh giá khoa học</h2>
+                <p class="mt-3 text-slate-500">Chúng tôi dựa trên 5 cột trụ chính để phân tích và đưa ra gợi ý tối ưu
+                    nhất cho bạn.</p>
+            </div>
+
+            <!-- Cards grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+
+                <div class="criteria-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
+                    <div class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined" style="font-size:22px;">payments</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-1">Giá thành</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Phân tích mức giá phù hợp với ngân sách cá
+                            nhân.</p>
+                    </div>
+                </div>
+
+                <div class="criteria-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
+                    <div class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined" style="font-size:22px;">computer</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-1">Hiệu năng</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Đánh giá vi xử lý, RAM và trải nghiệm đa
+                            nhiệm.</p>
+                    </div>
+                </div>
+
+                <div class="criteria-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
+                    <div class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined" style="font-size:22px;">photo_camera</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-1">Camera</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Độ phân giải, khả năng zoom và chụp thiếu
+                            sáng.</p>
+                    </div>
+                </div>
+
+                <div class="criteria-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
+                    <div class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined" style="font-size:22px;">battery_charging_full</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-1">Pin</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Dung lượng mAh và tốc độ sạc nhanh hỗ trợ.</p>
+                    </div>
+                </div>
+
+                <div class="criteria-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col gap-4">
+                    <div class="w-11 h-11 bg-primary rounded-xl flex items-center justify-center text-white">
+                        <span class="material-symbols-outlined" style="font-size:22px;">palette</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 mb-1">Thiết kế</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Vật liệu hoàn thiện và tính thẩm mỹ của thiết
+                            bị.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     3-STEP PROCESS
+═══════════════════════════════════════════════════════════ -->
+    <section class="bg-slate-50 py-20" id="process">
+        <div class="max-w-5xl mx-auto px-6">
+
+            <!-- Heading -->
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Quy trình 3 <span
+                        class="border-b-4 border-primary pb-0.5">bước</span> khoa học</h2>
+            </div>
+
+            <!-- Steps -->
+            <div class="flex items-start gap-0">
+
+                <!-- Step 1 -->
+                <div class="flex flex-col items-center text-center flex-1 px-4">
+                    <div
+                        class="w-16 h-16 rounded-full border-2 border-slate-200 flex items-center justify-center text-2xl font-black text-slate-400 bg-white shadow-sm mb-5">
+                        1</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Nhập ma trận so sánh</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Người dùng thực hiện đánh giá mức độ quan trọng
+                        giữa các cặp tiêu chí theo thang đo Saaty.</p>
+                </div>
+
+                <!-- Connector -->
+                <div class="step-connector mt-8 flex-shrink-0"></div>
+
+                <!-- Step 2 -->
+                <div class="flex flex-col items-center text-center flex-1 px-4">
+                    <div
+                        class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-black text-white shadow-lg shadow-primary/30 mb-5">
+                        2</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Tính trọng số &amp; CR</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Hệ thống tự động tính trọng số và kiểm tra tính
+                        nhất quán (Consistency Ratio) của ma trận.</p>
+                </div>
+
+                <!-- Connector -->
+                <div class="step-connector mt-8 flex-shrink-0"></div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col items-center text-center flex-1 px-4">
+                    <div
+                        class="w-16 h-16 rounded-full border-2 border-slate-200 flex items-center justify-center text-2xl font-black text-primary bg-white shadow-sm mb-5">
+                        3</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Kết quả đề xuất</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Danh sách các điện thoại Samsung được xếp hạng
+                        theo điểm số tổng hợp từ lựa chọn của bạn.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     CTA BANNER
+═══════════════════════════════════════════════════════════ -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-primary rounded-3xl px-10 py-14 text-center text-white">
+                <h2 class="text-3xl md:text-4xl font-bold mb-3">Sẵn sàng chọn chiếc Samsung hoàn hảo?</h2>
+                <p class="text-lg opacity-80 mb-9">Bắt đầu trải nghiệm phương pháp lựa chọn khoa học nhất hiện nay.</p>
+                <button onclick="openModal()"
+                    class="bg-white text-primary font-bold text-base px-10 py-4 rounded-full hover:bg-slate-50 transition-all shadow-xl active:scale-95">
+                    Bắt đầu ngay bây giờ
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
+    <footer class="border-t border-slate-100 bg-white py-10">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined" style="font-size:16px;">smartphone</span>
+                </div>
+                <span class="font-bold text-slate-900">Samsung AHP System</span>
+            </div>
+            <p class="text-sm text-slate-400">© 2026 Samsung AHP Project. Bảo lưu mọi quyền.</p>
+            <div class="flex gap-5">
+                <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:20px;">social_leaderboard</span>
+                </a>
+                <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:20px;">language</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════════════
+     AHP MODAL (5 steps)
+═══════════════════════════════════════════════════════════ -->
+    <div id="ahp-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div onclick="closeModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+        <!-- Modal box -->
+        <div id="modal-box"
+            class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+            style="max-height:90vh;">
+
+            <!-- Header -->
+            <div class="bg-samsung-gradient px-6 pt-6 pb-5 text-white flex-shrink-0">
+                <div class="flex items-center justify-between mb-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                            <span class="material-symbols-outlined">analytics</span>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold opacity-75 uppercase tracking-wider">Samsung AHP</div>
+                            <div class="text-lg font-bold" id="modal-title">Thiết lập tiêu chí</div>
+                        </div>
+                    </div>
+                    <button onclick="closeModal()"
+                        class="w-9 h-9 rounded-xl bg-white/20 hover:bg-white/30 transition flex items-center justify-center text-white font-bold text-lg">✕</button>
+                </div>
+
+                <!-- Step dots -->
+                <div class="flex items-center gap-2">
+                    <div id="dot-1"
+                        class="step-dot w-8 h-8 rounded-full bg-white text-primary text-xs font-bold flex items-center justify-center ring-4 ring-white/40">
+                        1</div>
+                    <div class="flex-1 h-0.5 bg-white/30 rounded"></div>
+                    <div id="dot-2"
+                        class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
+                        2</div>
+                    <div class="flex-1 h-0.5 bg-white/30 rounded"></div>
+                    <div id="dot-3"
+                        class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
+                        3</div>
+                    <div class="flex-1 h-0.5 bg-white/30 rounded"></div>
+                    <div id="dot-4"
+                        class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
+                        4</div>
+                    <div class="flex-1 h-0.5 bg-white/30 rounded"></div>
+                    <div id="dot-5"
+                        class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
+                        5</div>
+                </div>
+                <div class="flex text-xs opacity-60 mt-1.5 justify-between px-1">
+                    <span>Tiêu chí</span><span>Ma trận</span><span>Tính toán</span><span>Phương án</span><span>Kết
+                        quả</span>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="flex-1 overflow-y-auto">
+                <div class="steps-wrapper p-6">
+
+                    <!-- STEP 1 -->
+                    <div class="step-panel active" id="step-1">
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 1 — Thiết lập tiêu chí</h3>
+                        <p class="text-sm text-slate-500 mb-4">Nhập số lượng tiêu chí và đặt tên cho từng tiêu chí đánh
+                            giá.</p>
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Số tiêu chí <span
+                                    class="text-slate-400 font-normal">(2–8)</span></label>
+                            <div class="flex items-center gap-3">
+                                <input id="criteria-count" type="number" min="2" max="8" value="5"
+                                    class="w-28 rounded-xl border border-slate-200 px-4 py-2.5 text-center text-lg font-bold text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                                <span class="text-sm text-slate-500">tiêu chí</span>
+                            </div>
+                        </div>
+                        <div class="space-y-2.5" id="criteria-names-container"></div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step-panel" id="step-2">
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 2 — Nhập ma trận so sánh cặp</h3>
+                        <p class="text-sm text-slate-500 mb-3">Điền mức độ quan trọng (1–9) vào ô tam giác trên. Ô xanh
+                            tự động tính nghịch đảo.</p>
+                        <div class="flex flex-wrap gap-3 text-xs text-slate-500 mb-3">
+                            <span class="flex items-center gap-1"><span
+                                    class="w-3 h-3 rounded bg-slate-100 border border-slate-300 inline-block"></span>Đường
+                                chéo (=1)</span>
+                            <span class="flex items-center gap-1"><span
+                                    class="w-3 h-3 rounded bg-blue-50 border border-blue-200 inline-block"></span>Tự
+                                động (=1/x)</span>
+                            <span class="flex items-center gap-1"><span
+                                    class="w-3 h-3 rounded bg-white border border-slate-300 inline-block"></span>Bạn
+                                nhập (1–9)</span>
+                        </div>
+                        <div class="overflow-x-auto" id="matrix-container"></div>
+                        <div class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-700">
+                            💡 <strong>Thang Saaty:</strong> 1=Ngang nhau · 3=Hơi quan trọng · 5=Quan trọng · 7=Rất quan
+                            trọng · 9=Cực kỳ quan trọng
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step-panel" id="step-3">
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 3 — Kết quả tính toán AHP</h3>
+                        <p class="text-sm text-slate-500 mb-4">Pipeline: Tổng cột → Chuẩn hóa → Trọng số → Kiểm tra nhất
+                            quán (CR).</p>
+                        <div id="pipeline-result">
+                            <div class="flex flex-col items-center gap-4 py-12">
+                                <div class="spinner"></div>
+                                <p class="text-sm text-slate-400">Đang chờ dữ liệu...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step-panel" id="step-4">
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 4 — Nhập phương án</h3>
+                        <p class="text-sm text-slate-500 mb-4">Nhập tên và điểm đánh giá theo từng tiêu chí (0.0–1.0).
+                        </p>
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Số phương án <span
+                                    class="text-slate-400 font-normal">(2–10)</span></label>
+                            <div class="flex items-center gap-3">
+                                <input id="alt-count" type="number" min="2" max="10" value="3"
+                                    class="w-28 rounded-xl border border-slate-200 px-4 py-2.5 text-center text-lg font-bold text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+                                <span class="text-sm text-slate-500">phương án</span>
+                            </div>
+                        </div>
+                        <div id="alt-names-container"></div>
+                        <div id="scores-container" class="mt-2"></div>
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="step-panel" id="step-5">
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 5 — Kết quả xếp hạng AHP</h3>
+                        <p class="text-sm text-slate-500 mb-4">Xếp hạng dựa trên trọng số tiêu chí và điểm đánh giá.</p>
+                        <div id="ranking-result">
+                            <div class="flex flex-col items-center gap-4 py-12">
+                                <div class="spinner"></div>
+                                <p class="text-sm text-slate-400">Đang chờ dữ liệu...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer nav -->
+            <div class="border-t border-slate-100 px-6 py-4 flex items-center justify-between bg-white flex-shrink-0">
+                <button id="btn-back" onclick="prevStep()"
+                    class="flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all active:scale-95">
+                    <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>Quay lại
+                </button>
+                <span class="text-xs text-slate-400" id="step-counter">1 / 5</span>
+                <button id="btn-next" onclick="handleNext()"
+                    class="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white hover:bg-primary-dark transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Tiếp theo<span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="index.js"></script>
+</body>
+
+</html>

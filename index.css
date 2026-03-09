@@ -1,0 +1,317 @@
+/* =====================================================================
+   index.css — Samsung AHP Home
+   Stitch Design: Primary #1A3DBE | Font: Inter
+   ===================================================================== */
+
+/* ── Material Symbols fix (Tailwind CDN override) ─────────────────── */
+.material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    font-size: inherit;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    direction: ltr !important;
+    font-feature-settings: 'liga' 1 !important;
+    -webkit-font-feature-settings: 'liga' 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+}
+
+/* ── Custom gradient ────────────────────────────────────────────────── */
+.bg-samsung {
+    background: #1A3DBE;
+}
+
+.bg-samsung-gradient {
+    background: linear-gradient(135deg, #1A3DBE 0%, #2447d6 100%);
+}
+
+.text-samsung {
+    color: #1A3DBE;
+}
+
+/* ── Criteria cards hover ────────────────────────────────────────────── */
+.criteria-card {
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.criteria-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(26, 61, 190, .15);
+}
+
+/* ── Step connector lines ────────────────────────────────────────────── */
+.step-connector {
+    flex: 1;
+    height: 2px;
+    background: #e2e8f0;
+    margin-bottom: 52px;
+}
+
+/* ── Modal ────────────────────────────────────────────────────────────── */
+#ahp-modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+}
+
+#ahp-modal.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#modal-box {
+    transform: scale(.95) translateY(20px);
+    transition: transform .35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#ahp-modal.open #modal-box {
+    transform: scale(1) translateY(0);
+}
+
+/* ── Step slide animation ─────────────────────────────────────────────── */
+.steps-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.step-panel {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(60px);
+    transition: transform .4s cubic-bezier(.4, 0, .2, 1), opacity .4s ease;
+}
+
+.step-panel.active {
+    position: relative;
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+}
+
+/* ── Spinner ────────────────────────────────────────────────────────────── */
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #1A3DBE;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Score bar ────────────────────────────────────────────────────────── */
+.score-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #1A3DBE, #4f72f5);
+    transition: width .9s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ── Toast ───────────────────────────────────────────────────────────── */
+.toast-el {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    padding: .75rem 1.25rem;
+    border-radius: .75rem;
+    color: #fff;
+    font-size: .875rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+    animation: toastIn .3s ease;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ════════════════════════════════════
+   MATRIX REDESIGN
+════════════════════════════════════ */
+.mx-legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 9px 14px;
+    margin-bottom: 8px;
+}
+
+.mx-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+}
+
+.mx-code {
+    font-weight: 700;
+    color: #1A3DBE;
+    background: #dbeafe;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.mx-name {
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mx-note {
+    font-size: 11.5px;
+    color: #854d0e;
+    background: #fefce8;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 7px 12px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.mx-scroll {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.mx-tbl {
+    border-collapse: collapse;
+    font-size: 12.5px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.mx-tbl th,
+.mx-tbl td {
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    height: 34px;
+    min-width: 54px;
+}
+
+.mx-tbl thead th {
+    background: #1A3DBE;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-color: #1230a0;
+}
+
+.mx-tbl thead th.mx-th-label {
+    background: #1230a0;
+    text-align: left;
+    padding-left: 12px;
+    min-width: 72px;
+}
+
+.mx-tbl td.mx-row-label {
+    background: #dbeafe !important;
+    font-weight: 700;
+    color: #1A3DBE;
+    font-size: 12px;
+    padding: 0 10px;
+    text-align: left;
+    border-right: 2px solid #93c5fd;
+}
+
+.mx-tbl tbody tr:nth-child(odd) td {
+    background: #f0f7ff;
+}
+
+.mx-tbl tbody tr:nth-child(even) td {
+    background: #fff;
+}
+
+.mx-tbl td.mx-diag {
+    background: #e2e8f0 !important;
+    color: #64748b;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.mx-tbl td.mx-recip {
+    background: #eff6ff !important;
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.mx-tbl td.mx-inp-cell {
+    padding: 3px;
+    background: #fff !important;
+}
+
+.mx-inp-new {
+    width: 56px;
+    height: 30px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+    transition: border-color .2s, box-shadow .2s;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    padding: 0 2px;
+}
+
+.mx-inp-new::-webkit-outer-spin-button,
+.mx-inp-new::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.mx-inp-new:focus {
+    outline: none;
+    border-color: #1A3DBE;
+    box-shadow: 0 0 0 2px rgba(26, 61, 190, .15);
+    background: #f0f7ff;
+}
+
+.mx-tbl tr.mx-sum-row td {
+    background: #fef9c3 !important;
+    font-weight: 700;
+    font-size: 11.5px;
+    color: #78350f;
+    border-top: 2px solid #fbbf24;
+}
+
+.mx-tbl tr.mx-sum-row td.mx-row-label {
+    background: #fef08a !important;
+    color: #78350f;
+    border-right-color: #fbbf24;
+}

@@ -339,14 +339,9 @@
                     <div id="dot-4"
                         class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
                         4</div>
-                    <div class="flex-1 h-0.5 bg-white/30 rounded"></div>
-                    <div id="dot-5"
-                        class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
-                        5</div>
                 </div>
                 <div class="flex text-xs opacity-60 mt-1.5 justify-between px-1">
-                    <span>Tiêu chí</span><span>Ma trận</span><span>Tính toán</span><span>Phương án</span><span>Kết
-                        quả</span>
+                    <span>Tiêu chí</span><span>Ma trận</span><span>Tính toán</span><span>Kết quả</span>
                 </div>
             </div>
 
@@ -357,16 +352,10 @@
                     <!-- STEP 1 -->
                     <div class="step-panel active" id="step-1">
                         <h3 class="font-bold text-slate-800 mb-1">Bước 1 — Thiết lập tiêu chí</h3>
-                        <p class="text-sm text-slate-500 mb-4">Nhập số lượng tiêu chí và đặt tên cho từng tiêu chí đánh
+                        <p class="text-sm text-slate-500 mb-4">Mặc định 6 tiêu chí. Đặt tên cho từng tiêu chí đánh
                             giá.</p>
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Số tiêu chí <span
-                                    class="text-slate-400 font-normal">(2–8)</span></label>
-                            <div class="flex items-center gap-3">
-                                <input id="criteria-count" type="number" min="2" max="8" value="5"
-                                    class="w-28 rounded-xl border border-slate-200 px-4 py-2.5 text-center text-lg font-bold text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                                <span class="text-sm text-slate-500">tiêu chí</span>
-                            </div>
+                        <div class="mb-4 hidden">
+                            <input id="criteria-count" type="hidden" value="6" />
                         </div>
                         <div class="space-y-2.5" id="criteria-names-container"></div>
                     </div>
@@ -409,30 +398,17 @@
 
                     <!-- STEP 4 -->
                     <div class="step-panel" id="step-4">
-                        <h3 class="font-bold text-slate-800 mb-1">Bước 4 — Nhập phương án</h3>
-                        <p class="text-sm text-slate-500 mb-4">Nhập tên và điểm đánh giá theo từng tiêu chí (0.0–1.0).
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 4 — Kết quả xếp hạng</h3>
+                        <p class="text-sm text-slate-500 mb-4">Xếp hạng các phương án theo lượng điểm của từng tiêu chí.
                         </p>
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Số phương án <span
-                                    class="text-slate-400 font-normal">(2–10)</span></label>
-                            <div class="flex items-center gap-3">
-                                <input id="alt-count" type="number" min="2" max="10" value="3"
-                                    class="w-28 rounded-xl border border-slate-200 px-4 py-2.5 text-center text-lg font-bold text-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
-                                <span class="text-sm text-slate-500">phương án</span>
-                            </div>
-                        </div>
-                        <div id="alt-names-container"></div>
-                        <div id="scores-container" class="mt-2"></div>
-                    </div>
 
-                    <!-- STEP 5 -->
-                    <div class="step-panel" id="step-5">
-                        <h3 class="font-bold text-slate-800 mb-1">Bước 5 — Kết quả xếp hạng AHP</h3>
-                        <p class="text-sm text-slate-500 mb-4">Xếp hạng dựa trên trọng số tiêu chí và điểm đánh giá.</p>
+                        <!-- TAB HEADER -->
+                        <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-4" id="ranking-tabs"></div>
+
                         <div id="ranking-result">
                             <div class="flex flex-col items-center gap-4 py-12">
                                 <div class="spinner"></div>
-                                <p class="text-sm text-slate-400">Đang chờ dữ liệu...</p>
+                                <p class="text-sm text-slate-400">Đang chuẩn bị dữ liệu...</p>
                             </div>
                         </div>
                     </div>
@@ -446,7 +422,7 @@
                     class="flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all active:scale-95">
                     <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>Quay lại
                 </button>
-                <span class="text-xs text-slate-400" id="step-counter">1 / 5</span>
+                <span class="text-xs text-slate-400" id="step-counter">1 / 4</span>
                 <button id="btn-next" onclick="handleNext()"
                     class="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white hover:bg-primary-dark transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                     Tiếp theo<span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>

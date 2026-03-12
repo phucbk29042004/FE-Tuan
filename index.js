@@ -78,8 +78,8 @@ function closeModal() {
 function resetModal() {
     curStep = 1; criteria = []; matrix = [];
     columnSums = []; normalizedMatrix = []; weights = []; consistData = {};
-    document.getElementById('criteria-count').value = 5;
-    renderCriteriaInputs(5);
+    document.getElementById('criteria-count').value = 6;
+    renderCriteriaInputs(6);
     document.querySelectorAll('.step-panel').forEach((p, i) => {
         p.className = 'step-panel' + (i === 0 ? ' active' : '');
     });
@@ -115,11 +115,11 @@ function goToStep(next, dir = 'fwd') {
 }
 
 function updateDots() {
-    const titles = ['Thiết lập tiêu chí', 'Nhập ma trận', 'Kết quả tính toán', 'Nhập phương án', 'Xếp hạng'];
-    document.getElementById('modal-title').textContent = titles[curStep - 1];
-    document.getElementById('step-counter').textContent = `${curStep} / 5`;
+    const titles = ['Thiết lập tiêu chí', 'Nhập ma trận', 'Kết quả tính toán', 'Kết quả xếp hạng'];
+    document.getElementById('modal-title').textContent = titles[curStep - 1] || '';
+    document.getElementById('step-counter').textContent = `${curStep} / 4`;
 
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 4; i++) {
         const dot = document.getElementById(`dot-${i}`);
         if (!dot) continue;
         if (i < curStep) { dot.className = 'step-dot w-8 h-8 rounded-full bg-white/50 text-white text-xs font-bold flex items-center justify-center'; dot.innerHTML = '✓'; }
@@ -133,7 +133,7 @@ function updateNavButtons() {
     const next = document.getElementById('btn-next');
     back.style.visibility = curStep === 1 ? 'hidden' : 'visible';
     next.disabled = false;
-    if (curStep === 5) {
+    if (curStep === 4) {
         next.innerHTML = '🔄 Làm lại<span class="material-symbols-outlined" style="font-size:18px;">refresh</span>';
     } else {
         next.innerHTML = 'Tiếp theo<span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>';
@@ -333,86 +333,84 @@ function renderPipelineResult() {
 }
 
 // ───────────────────────────────────────────────────────
-// STEP 4 — Alternatives
+// DATA RENDER RANKING BY CRITERIA (Step 4)
 // ───────────────────────────────────────────────────────
-function renderAltInputs(count) {
-    const namesEl = document.getElementById('alt-names-container');
-    const scoresEl = document.getElementById('scores-container');
-    const n = criteria.length;
+let activeTabIndicator = 0;
 
-    namesEl.innerHTML = '<div class="space-y-2.5 mb-4">' +
-        Array.from({ length: count }, (_, a) => `
-      <div class="flex items-center gap-3">
-        <div class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-bold flex-shrink-0 flex items-center justify-center">${a + 1}</div>
-        <input id="an-${a}" class="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
-          placeholder="${DEFAULT_ALTS[a] || `Phương án ${a + 1}`}"
-          value="${DEFAULT_ALTS[a] || ''}"
-          oninput="document.getElementById('al-${a}').textContent=this.value||'${DEFAULT_ALTS[a] || `PA ${a + 1}`}'"/>
-      </div>`).join('') + '</div>';
+function runRanking() {
+    activeTabIndicator = 0; // Default to C1
 
-    let tbl = `<div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Điểm theo tiêu chí (0–1)</div>
-    <div class="overflow-x-auto mx-scroll"><table class="mx-tbl"><thead><tr>
-      <th class="mx-th-label">Phương án</th>
-      ${criteria.map(c => `<th style="font-size:11px">${c}</th>`).join('')}
-    </tr></thead><tbody>`;
-
+    // Fixed alternatives (3) and fixed criteria (6)
+    const count = 3;
+    const names = [DEFAULT_ALTS[0], DEFAULT_ALTS[1], DEFAULT_ALTS[2]];
+    const scores = [];
     for (let a = 0; a < count; a++) {
-        tbl += `<tr><td class="mx-row-label" id="al-${a}">${DEFAULT_ALTS[a] || `PA ${a + 1}`}</td>`;
-        for (let c = 0; c < n; c++) {
-            const def = DEFAULT_SCORES[a]?.[c] ?? 0.5;
-            tbl += `<td class="mx-inp-cell"><input class="mx-inp-new" id="sc-${a}-${c}" type="number" min="0" max="1" step="0.01" value="${def}"/></td>`;
-        }
-        tbl += '</tr>';
-    }
-    tbl += '</tbody></table></div>';
-    scoresEl.innerHTML = tbl;
-}
-
-function readAlts() {
-    const count = parseInt(document.getElementById('alt-count').value) || 3;
-    const n = criteria.length;
-    const names = [], scores = [];
-    for (let a = 0; a < count; a++) {
-        names.push((document.getElementById(`an-${a}`)?.value || '').trim() || `Phương án ${a + 1}`);
         const row = [];
-        for (let c = 0; c < n; c++) {
-            const v = parseFloat(document.getElementById(`sc-${a}-${c}`)?.value);
-            if (isNaN(v) || v < 0 || v > 1) { toast(`Điểm [${names[a]} / ${criteria[c]}] phải 0–1`, 'err'); return null; }
-            row.push(v);
+        for (let c = 0; c < 6; c++) {
+            row.push(DEFAULT_SCORES[a][c]);
         }
         scores.push(row);
     }
-    return { names, scores };
-}
-
-// ───────────────────────────────────────────────────────
-// STEP 5 — Ranking
-// ───────────────────────────────────────────────────────
-async function runRanking() {
-    const res = readAlts();
-    if (!res) return;
-    const { names, scores } = res;
 
     const el = document.getElementById('ranking-result');
-    el.innerHTML = '<div class="flex flex-col items-center gap-4 py-12"><div class="spinner"></div><p class="text-sm text-slate-400">Đang xếp hạng...</p></div>';
+    el.innerHTML = '<div class="flex flex-col items-center gap-4 py-12"><div class="spinner"></div><p class="text-sm text-slate-400">Đang chuẩn bị dữ liệu...</p></div>';
     document.getElementById('btn-next').disabled = true;
 
     try {
-        const data = await apiPost('/ahp/rank', { criteria_weights: weights, alternative_scores: scores, names });
-        renderRanking(data.ranking);
+        renderTabsAndRanking(names, scores);
     } catch (err) {
         el.innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
-      <div class="font-bold text-red-700 mb-1">⚠️ Lỗi xếp hạng</div>
+      <div class="font-bold text-red-700 mb-1">⚠️ Lỗi render UI</div>
       <div class="text-sm text-red-600 mb-3">${err.message}</div>
-      <button class="bg-red-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold" onclick="runRanking()">↺ Thử lại</button>
     </div>`;
-    } finally { document.getElementById('btn-next').disabled = false; }
+    } finally {
+        document.getElementById('btn-next').disabled = false;
+    }
 }
 
-function renderRanking(ranking) {
+function renderTabsAndRanking(names, scores) {
+    const tabsContainer = document.getElementById('ranking-tabs');
+    if (!tabsContainer) return;
+
+    let tabsHTML = '';
+    // criteria is user-input names array, length = 6
+    criteria.forEach((cItem, idx) => {
+        const isActive = activeTabIndicator === idx;
+        tabsHTML += `<button onclick="switchTab(${idx})" class="px-4 py-2 text-sm font-bold rounded-full whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">${cItem}</button>`;
+    });
+    tabsContainer.innerHTML = tabsHTML;
+
+    renderTabContent(activeTabIndicator, names, scores);
+}
+
+window.switchTab = function (idx) {
+    activeTabIndicator = idx;
+
+    // Re-generate
+    const count = 3;
+    const names = [DEFAULT_ALTS[0], DEFAULT_ALTS[1], DEFAULT_ALTS[2]];
+    const scores = [];
+    for (let a = 0; a < count; a++) {
+        const row = [];
+        for (let c = 0; c < 6; c++) {
+            row.push(DEFAULT_SCORES[a][c]);
+        }
+        scores.push(row);
+    }
+
+    renderTabsAndRanking(names, scores);
+}
+
+function renderTabContent(cIdx, names, scores) {
+    const rankData = names.map((name, aIdx) => {
+        return { name: name, score: scores[aIdx][cIdx] };
+    });
+    // Sort descending by score
+    rankData.sort((a, b) => b.score - a.score);
+
     const medals = ['🥇', '🥈', '🥉'];
-    const top = ranking[0]?.score || 1;
-    const cards = ranking.map((item, i) => {
+    const top = rankData[0]?.score || 1;
+    const cards = rankData.map((item, i) => {
         const pct = (item.score / top * 100).toFixed(1);
         return `<div class="flex items-center gap-4 p-4 rounded-2xl border ${i === 0 ? 'border-amber-300 bg-amber-50' : 'border-slate-100 bg-white'} mb-3">
       <span class="text-3xl flex-shrink-0">${medals[i] || `#${i + 1}`}</span>
@@ -423,16 +421,16 @@ function renderRanking(ranking) {
         </div>
       </div>
       <div class="text-right flex-shrink-0">
-        <div class="text-xl font-black ${i === 0 ? 'text-amber-700' : 'text-primary'}">${item.score.toFixed(4)}</div>
-        <div class="text-xs text-slate-400">điểm AHP</div>
+        <div class="text-xl font-black ${i === 0 ? 'text-amber-700' : 'text-primary'}">${item.score.toFixed(2)}</div>
+        <div class="text-xs text-slate-400">điểm</div>
       </div>
     </div>`;
     }).join('');
 
     document.getElementById('ranking-result').innerHTML = `
-    <div class="text-center mb-5">
-      <div class="text-3xl mb-2">🏆</div>
-      <div class="font-bold text-slate-900">Kết quả xếp hạng AHP</div>
+    <div class="text-center mb-5 mt-2">
+      <div class="text-2xl mb-2">🏆</div>
+      <div class="font-bold text-slate-900">Xếp hạng trên tiêu chí <span class="text-primary">${criteria[cIdx]}</span></div>
     </div>
     ${cards}`;
 
@@ -457,18 +455,9 @@ async function handleNext() {
     }
     else if (curStep === 3) {
         goToStep(4, 'fwd');
-        const count = parseInt(document.getElementById('alt-count').value) || 3;
-        renderAltInputs(count);
-        document.getElementById('alt-count').addEventListener('input', function () {
-            const n = parseInt(this.value);
-            if (!isNaN(n) && n >= 2 && n <= 10) renderAltInputs(n);
-        }, { once: true });
-    }
-    else if (curStep === 4) {
-        goToStep(5, 'fwd');
         await runRanking();
     }
-    else if (curStep === 5) {
+    else if (curStep === 4) {
         // Làm lại
         resetModal();
     }
@@ -478,12 +467,7 @@ async function handleNext() {
 // INIT
 // ───────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    renderCriteriaInputs(5);
-
-    document.getElementById('criteria-count').addEventListener('input', function () {
-        const n = parseInt(this.value);
-        if (!isNaN(n) && n >= 2 && n <= 8) renderCriteriaInputs(n);
-    });
+    renderCriteriaInputs(6);
 
     updateDots();
     updateNavButtons();

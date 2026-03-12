@@ -1,5 +1,5 @@
 
-const API_BASE = 'https://audrina-subultimate-ghostily.ngrok-free.app';
+const API_BASE = 'https://projectahpss.onrender.com';
 const HEADERS = { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' };
 
 const DEFAULT_CRITERIA = ['Giá thành', 'Hiệu năng', 'Camera', 'Pin', 'Thiết kế', 'Màn hình', 'Bộ nhớ', 'Kết nối'];

@@ -1,6 +1,6 @@
 # Tài liệu API AHP cho Frontend
 
-> **Base URL:** `http://127.0.0.1:8000`  
+> **Base URL:** `https://projectahpss.onrender.com`  
 > **Phương thức:** Tất cả các endpoint đều dùng `POST`  
 > **Content-Type:** `application/json`
 
@@ -201,4 +201,4 @@ Dùng để kiểm tra kết nối server và database còn sống không.
 
 - Tất cả request gửi dưới dạng **JSON body**, không phải form-data.
 - Slug đường dẫn không có `/api/` prefix — chỉ có `/ahp/`.
-- Xem tài liệu Swagger tương tác tại: **http://127.0.0.1:8000/docs**
+- Xem tài liệu Swagger tương tác tại: **https://projectahpss.onrender.com/docs**

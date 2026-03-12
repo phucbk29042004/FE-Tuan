@@ -315,3 +315,78 @@
     color: #78350f;
     border-right-color: #fbbf24;
 }
+
+/* ════════════════════════════════════
+   PHONE MOCKUP CSS & ANIMATIONS
+════════════════════════════════════ */
+.phone-float-wrapper {
+    animation: floatingPhone 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes floatingPhone {
+    0% {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(1deg);
+    }
+
+    100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+}
+
+.phone-mockup {
+    width: 280px;
+    height: 580px;
+    background: #1e293b;
+    border-radius: 40px;
+    position: relative;
+    box-shadow:
+        0 0 0 4px #0f172a,
+        /* viền thép */
+        20px 30px 60px -10px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 8px #0f172a;
+    /* viền bezel */
+    overflow: hidden;
+    transform: perspective(800px) rotateY(-10deg) rotateX(10deg);
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.phone-mockup:hover {
+    transform: perspective(800px) rotateY(-5deg) rotateX(5deg) scale(1.02);
+}
+
+.phone-notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 25px;
+    background: #0f172a;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.phone-lens {
+    width: 10px;
+    height: 10px;
+    background: #1e293b;
+    border-radius: 50%;
+    box-shadow: inset -2px -1px 4px rgba(255, 255, 255, 0.1);
+}
+
+.phone-screen {
+    position: absolute;
+    inset: 8px;
+    background: #f8fafc;
+    border-radius: 32px;
+    overflow: hidden;
+}

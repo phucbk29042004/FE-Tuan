@@ -19,6 +19,7 @@ const DEFAULT_SCORES = [
 let curStep = 1;
 let criteria = [], matrix = [];
 let columnSums = [], normalizedMatrix = [], weights = [], consistData = {};
+let rankingsByCriteria = [];
 
 // ───────────────────────────────────────────────────────
 // ICON FIX — re-append sau khi Tailwind CDN inject xong
@@ -77,7 +78,7 @@ function closeModal() {
 }
 function resetModal() {
     curStep = 1; criteria = []; matrix = [];
-    columnSums = []; normalizedMatrix = []; weights = []; consistData = {};
+    columnSums = []; normalizedMatrix = []; weights = []; consistData = {}; rankingsByCriteria = [];
     document.getElementById('criteria-count').value = 6;
     renderCriteriaInputs(6);
     document.querySelectorAll('.step-panel').forEach((p, i) => {
@@ -337,16 +338,16 @@ function renderPipelineResult() {
 // ───────────────────────────────────────────────────────
 let activeTabIndicator = 0;
 
-function runRanking() {
-    activeTabIndicator = 0; // Default to C1
 
-    // Fixed alternatives (3) and fixed criteria (6)
+async function runRanking() {
+    activeTabIndicator = 0; // Default to first tab
+
     const count = 3;
     const names = [DEFAULT_ALTS[0], DEFAULT_ALTS[1], DEFAULT_ALTS[2]];
     const scores = [];
     for (let a = 0; a < count; a++) {
         const row = [];
-        for (let c = 0; c < 6; c++) {
+        for (let c = 0; c < 6; c++) { // Assuming 6 criteria for scores, adjust if dynamic
             row.push(DEFAULT_SCORES[a][c]);
         }
         scores.push(row);
@@ -357,7 +358,21 @@ function runRanking() {
     document.getElementById('btn-next').disabled = true;
 
     try {
-        renderTabsAndRanking(names, scores);
+        // Gọi API backend lấy dữ liệu rank
+        const data = await apiPost('/ahp/rank/by-criteria', {
+            alternative_scores: scores,
+            names: names,
+            criteria_names: criteria,
+            top_k: 3
+        });
+
+        // Lưu dữ liệu vào biến toàn cục và render
+        rankingsByCriteria = data.rankings_by_criteria || [];
+        if (rankingsByCriteria.length > 0) {
+            renderTabsAndRanking();
+        } else {
+            throw new Error("Dữ liệu xếp hạng rỗng!");
+        }
     } catch (err) {
         el.innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
       <div class="font-bold text-red-700 mb-1">⚠️ Lỗi render UI</div>
@@ -368,52 +383,37 @@ function runRanking() {
     }
 }
 
-function renderTabsAndRanking(names, scores) {
+function renderTabsAndRanking() {
     const tabsContainer = document.getElementById('ranking-tabs');
-    if (!tabsContainer) return;
+    if (!tabsContainer || rankingsByCriteria.length === 0) return;
 
     let tabsHTML = '';
-    // criteria is user-input names array, length = 6
-    criteria.forEach((cItem, idx) => {
+    rankingsByCriteria.forEach((critObj, idx) => {
         const isActive = activeTabIndicator === idx;
-        tabsHTML += `<button onclick="switchTab(${idx})" class="px-4 py-2 text-sm font-bold rounded-full whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">${cItem}</button>`;
+        tabsHTML += `<button onclick="switchTab(${idx})" class="px-4 py-2 text-sm font-bold rounded-full whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">${critObj.criterion}</button>`;
     });
     tabsContainer.innerHTML = tabsHTML;
 
-    renderTabContent(activeTabIndicator, names, scores);
+    renderTabContent(activeTabIndicator);
 }
 
 window.switchTab = function (idx) {
     activeTabIndicator = idx;
-
-    // Re-generate
-    const count = 3;
-    const names = [DEFAULT_ALTS[0], DEFAULT_ALTS[1], DEFAULT_ALTS[2]];
-    const scores = [];
-    for (let a = 0; a < count; a++) {
-        const row = [];
-        for (let c = 0; c < 6; c++) {
-            row.push(DEFAULT_SCORES[a][c]);
-        }
-        scores.push(row);
-    }
-
-    renderTabsAndRanking(names, scores);
+    renderTabsAndRanking();
 }
 
-function renderTabContent(cIdx, names, scores) {
-    const rankData = names.map((name, aIdx) => {
-        return { name: name, score: scores[aIdx][cIdx] };
-    });
-    // Sort descending by score
-    rankData.sort((a, b) => b.score - a.score);
+function renderTabContent(cIdx) {
+    const currentData = rankingsByCriteria[cIdx];
+    if (!currentData) return;
+
+    const rankData = currentData.top_alternatives;
 
     const medals = ['🥇', '🥈', '🥉'];
     const top = rankData[0]?.score || 1;
     const cards = rankData.map((item, i) => {
         const pct = (item.score / top * 100).toFixed(1);
         return `<div class="flex items-center gap-4 p-4 rounded-2xl border ${i === 0 ? 'border-amber-300 bg-amber-50' : 'border-slate-100 bg-white'} mb-3">
-      <span class="text-3xl flex-shrink-0">${medals[i] || `#${i + 1}`}</span>
+      <span class="text-3xl flex-shrink-0">${medals[i] || `#${item.rank}`}</span>
       <div class="flex-1 min-w-0">
         <div class="font-bold text-slate-900">${item.name}</div>
         <div class="h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
@@ -430,7 +430,7 @@ function renderTabContent(cIdx, names, scores) {
     document.getElementById('ranking-result').innerHTML = `
     <div class="text-center mb-5 mt-2">
       <div class="text-2xl mb-2">🏆</div>
-      <div class="font-bold text-slate-900">Xếp hạng trên tiêu chí <span class="text-primary">${criteria[cIdx]}</span></div>
+      <div class="font-bold text-slate-900">Xếp hạng trên tiêu chí <span class="text-primary">${currentData.criterion}</span></div>
     </div>
     ${cards}`;
 

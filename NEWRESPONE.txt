@@ -1,0 +1,47 @@
+rank/by-criteria trong project này là:
+
+POST /ahp/rank/by-criteria
+Content-Type: application/json
+Input body
+
+{
+  "alternative_scores": [[8.5, 7.0, 9.0], [7.2, 8.8, 8.0], [9.1, 6.5, 8.7]],
+  "names": ["PA 1", "PA 2", "PA 3"],
+  "criteria_names": ["Chi phi", "Chat luong", "Toc do"],
+  "top_k": 2
+}
+alternative_scores: ma trận điểm [số_phương_án][số_tiêu_chí] (bắt buộc)
+names: tên phương án (optional), thiếu thì auto "Phuong an 1..n"
+criteria_names: tên tiêu chí (optional), thiếu thì auto "Tieu chi 1..m"
+top_k: số top mỗi tiêu chí (default 3, phải >=1)
+Output 200
+
+{
+  "rankings_by_criteria": [
+    {
+      "criterion": "Chi phi",
+      "top_alternatives": [
+        { "rank": 1, "name": "PA 3", "score": 9.1 },
+        { "rank": 2, "name": "PA 1", "score": 8.5 }
+      ]
+    },
+    {
+      "criterion": "Chat luong",
+      "top_alternatives": [
+        { "rank": 1, "name": "PA 2", "score": 8.8 },
+        { "rank": 2, "name": "PA 1", "score": 7.0 }
+      ]
+    },
+    {
+      "criterion": "Toc do",
+      "top_alternatives": [
+        { "rank": 1, "name": "PA 1", "score": 9.0 },
+        { "rank": 2, "name": "PA 3", "score": 8.7 }
+      ]
+    }
+  ]
+}
+Lỗi thường gặp
+
+400: số tiêu chí giữa các phương án không đồng nhất, hoặc số criteria_names / names không khớp.
+422: sai kiểu dữ liệu hoặc thiếu field bắt buộc.

@@ -20,6 +20,8 @@ let curStep = 1;
 let criteria = [], matrix = [];
 let columnSums = [], normalizedMatrix = [], weights = [], consistData = {};
 let rankingsByCriteria = [];
+let criteriaEvalData = [];
+let activeEvalTab = 0;
 
 // ───────────────────────────────────────────────────────
 // ICON FIX — re-append sau khi Tailwind CDN inject xong
@@ -78,7 +80,8 @@ function closeModal() {
 }
 function resetModal() {
     curStep = 1; criteria = []; matrix = [];
-    columnSums = []; normalizedMatrix = []; weights = []; consistData = {}; rankingsByCriteria = [];
+    columnSums = []; normalizedMatrix = []; weights = []; consistData = {};
+    rankingsByCriteria = []; criteriaEvalData = []; activeEvalTab = 0;
     document.getElementById('criteria-count').value = 6;
     renderCriteriaInputs(6);
     document.querySelectorAll('.step-panel').forEach((p, i) => {
@@ -116,11 +119,11 @@ function goToStep(next, dir = 'fwd') {
 }
 
 function updateDots() {
-    const titles = ['Thiết lập tiêu chí', 'Nhập ma trận', 'Kết quả tính toán', 'Kết quả xếp hạng'];
+    const titles = ['Thiết lập tiêu chí', 'Nhập ma trận', 'Kết quả tính toán', 'Đánh giá ma trận tiêu chí', 'Kết quả xếp hạng'];
     document.getElementById('modal-title').textContent = titles[curStep - 1] || '';
-    document.getElementById('step-counter').textContent = `${curStep} / 4`;
+    document.getElementById('step-counter').textContent = `${curStep} / 5`;
 
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 5; i++) {
         const dot = document.getElementById(`dot-${i}`);
         if (!dot) continue;
         if (i < curStep) { dot.className = 'step-dot w-8 h-8 rounded-full bg-white/50 text-white text-xs font-bold flex items-center justify-center'; dot.innerHTML = '✓'; }
@@ -134,7 +137,7 @@ function updateNavButtons() {
     const next = document.getElementById('btn-next');
     back.style.visibility = curStep === 1 ? 'hidden' : 'visible';
     next.disabled = false;
-    if (curStep === 4) {
+    if (curStep === 5) {
         next.innerHTML = '🔄 Làm lại<span class="material-symbols-outlined" style="font-size:18px;">refresh</span>';
     } else {
         next.innerHTML = 'Tiếp theo<span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>';
@@ -334,7 +337,82 @@ function renderPipelineResult() {
 }
 
 // ───────────────────────────────────────────────────────
-// DATA RENDER RANKING BY CRITERIA (Step 4)
+// STEP 4 — Criteria Evaluation
+// ───────────────────────────────────────────────────────
+async function runCriteriaEvaluation() {
+    const el = document.getElementById('criteria-eval-result');
+    el.innerHTML = '<div class="flex flex-col items-center gap-4 py-12"><div class="spinner"></div><p class="text-sm text-slate-400">Đang gọi API đánh giá tiêu chí...</p></div>';
+    document.getElementById('btn-next').disabled = true;
+
+    const body = { weights };
+
+    const modelVal = (document.getElementById('filter-model')?.value || '').trim();
+    const limitVal = parseInt(document.getElementById('filter-limit')?.value);
+    if (modelVal || !isNaN(limitVal)) {
+        body.filters = {};
+        if (modelVal) body.filters.mau_dien_thoai = modelVal;
+        if (!isNaN(limitVal) && limitVal > 0) body.filters.limit = limitVal;
+    }
+
+    try {
+        const data = await apiPost('/ahp/criteria-evaluation', body);
+        criteriaEvalData = data.tabs || [];
+        activeEvalTab = 0;
+        if (criteriaEvalData.length > 0) {
+            renderCriteriaEvalTabs();
+        } else {
+            throw new Error('Dữ liệu đánh giá tiêu chí rỗng!');
+        }
+        document.getElementById('btn-next').disabled = false;
+    } catch (err) {
+        el.innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+      <div class="font-bold text-red-700 mb-1">⚠️ Lỗi kết nối API</div>
+      <div class="text-sm text-red-600 mb-3">${err.message}</div>
+      <button class="bg-red-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold" onclick="runCriteriaEvaluation()">↺ Thử lại</button>
+    </div>`;
+        document.getElementById('btn-next').disabled = false;
+    }
+}
+
+function renderCriteriaEvalTabs() {
+    const tabsEl = document.getElementById('criteria-eval-tabs');
+    if (!tabsEl || criteriaEvalData.length === 0) return;
+    let html = '';
+    criteriaEvalData.forEach((tab, idx) => {
+        const isActive = activeEvalTab === idx;
+        html += `<button onclick="switchEvalTab(${idx})" class="px-4 py-2 text-sm font-bold rounded-full whitespace-nowrap transition-colors ${isActive ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}">${tab.criteria_id}: ${tab.criteria_name}</button>`;
+    });
+    tabsEl.innerHTML = html;
+    renderCriteriaEvalContent(activeEvalTab);
+}
+
+window.switchEvalTab = function (idx) {
+    activeEvalTab = idx;
+    renderCriteriaEvalTabs();
+};
+
+function renderCriteriaEvalContent(idx) {
+    const tab = criteriaEvalData[idx];
+    if (!tab) return;
+    const headers = tab.locations_header || [];
+    let thead = '<tr><th class="mx-th-label">Phương án</th>' + headers.map(h => `<th>${h.name}</th>`).join('') + '<th>Local W</th></tr>';
+    let tbody = '';
+    tab.matrix_rows.forEach((row, i) => {
+        tbody += `<tr><td class="mx-row-label">${headers[i]?.name || `P${i+1}`}</td>`;
+        row.forEach(cell => { tbody += `<td class="text-center text-sm py-2 px-3">${cell}</td>`; });
+        tbody += `<td class="text-center text-sm py-2 px-3 font-bold text-primary">${(tab.local_weights[i] * 100).toFixed(2)}%</td>`;
+        tbody += '</tr>';
+    });
+    const crOk = tab.cr < 0.1;
+    document.getElementById('criteria-eval-result').innerHTML = `
+    <div class="mx-scroll mb-3"><table class="mx-tbl"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div>
+    <div class="rounded-xl p-3 text-sm font-semibold text-center ${crOk ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}">
+      CR = ${tab.cr.toFixed(4)} — ${crOk ? '✓ Nhất quán' : '✗ Không nhất quán'}
+    </div>`;
+}
+
+// ───────────────────────────────────────────────────────
+// DATA RENDER RANKING BY CRITERIA (Step 5)
 // ───────────────────────────────────────────────────────
 let activeTabIndicator = 0;
 
@@ -455,9 +533,13 @@ async function handleNext() {
     }
     else if (curStep === 3) {
         goToStep(4, 'fwd');
-        await runRanking();
+        await runCriteriaEvaluation();
     }
     else if (curStep === 4) {
+        goToStep(5, 'fwd');
+        await runRanking();
+    }
+    else if (curStep === 5) {
         // Làm lại
         resetModal();
     }

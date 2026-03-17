@@ -404,9 +404,13 @@
                     <div id="dot-4"
                         class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
                         4</div>
+                    <div class="flex-1 h-0.5 bg-white/30 rounded"></div>
+                    <div id="dot-5"
+                        class="step-dot w-8 h-8 rounded-full bg-white/25 text-white text-xs font-bold flex items-center justify-center">
+                        5</div>
                 </div>
                 <div class="flex text-xs opacity-60 mt-1.5 justify-between px-1">
-                    <span>Tiêu chí</span><span>Ma trận</span><span>Tính toán</span><span>Kết quả</span>
+                    <span>Tiêu chí</span><span>Ma trận</span><span>Tính toán</span><span>Đánh giá</span><span>Kết quả</span>
                 </div>
             </div>
 
@@ -461,9 +465,40 @@
                         </div>
                     </div>
 
-                    <!-- STEP 4 -->
+                    <!-- STEP 4 — Criteria Evaluation -->
                     <div class="step-panel" id="step-4">
-                        <h3 class="font-bold text-slate-800 mb-1">Bước 4 — Kết quả xếp hạng</h3>
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 4 — Đánh giá ma trận tiêu chí</h3>
+                        <p class="text-sm text-slate-500 mb-4">Ma trận so sánh cặp các phương án theo từng tiêu chí, được tính toán tự động từ API.</p>
+
+                        <!-- Filter inputs -->
+                        <div class="mb-4 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Bộ lọc (tuỳ chọn)</div>
+                            <div class="flex gap-3">
+                                <div class="flex-1">
+                                    <label class="text-xs text-slate-500 mb-1 block">Mẫu điện thoại</label>
+                                    <input id="filter-model" type="text" placeholder="VD: Galaxy S24" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15" />
+                                </div>
+                                <div class="w-24">
+                                    <label class="text-xs text-slate-500 mb-1 block">Số lượng</label>
+                                    <input id="filter-limit" type="number" min="1" max="20" placeholder="5" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Criteria eval tabs -->
+                        <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-4" id="criteria-eval-tabs"></div>
+
+                        <div id="criteria-eval-result">
+                            <div class="flex flex-col items-center gap-4 py-12">
+                                <div class="spinner"></div>
+                                <p class="text-sm text-slate-400">Đang chờ dữ liệu...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5 — Ranking -->
+                    <div class="step-panel" id="step-5">
+                        <h3 class="font-bold text-slate-800 mb-1">Bước 5 — Kết quả xếp hạng</h3>
                         <p class="text-sm text-slate-500 mb-4">Xếp hạng các phương án theo lượng điểm của từng tiêu chí.
                         </p>
 
@@ -487,7 +522,7 @@
                     class="flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-all active:scale-95">
                     <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>Quay lại
                 </button>
-                <span class="text-xs text-slate-400" id="step-counter">1 / 4</span>
+                <span class="text-xs text-slate-400" id="step-counter">1 / 5</span>
                 <button id="btn-next" onclick="handleNext()"
                     class="flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white hover:bg-primary-dark transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                     Tiếp theo<span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>

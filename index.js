@@ -62,7 +62,13 @@ function toast(msg, type = 'info') {
 
 async function apiPost(endpoint, body) {
     const res = await fetch(`${API_BASE}${endpoint}`, { method: 'POST', headers: HEADERS, body: JSON.stringify(body) });
-    if (!res.ok) throw new Error(`HTTP ${res.status} — ${endpoint}`);
+    if (!res.ok) {
+        let errText = '';
+        try { errText = await res.text(); } catch (_) {}
+        const msg = `HTTP ${res.status} — ${endpoint}${errText ? ' | ' + errText : ''}`;
+        console.error('[apiPost] Server error:', msg, '\nBody sent:', JSON.stringify(body, null, 2));
+        throw new Error(msg);
+    }
     return res.json();
 }
 
@@ -365,9 +371,11 @@ async function runCriteriaEvaluation() {
         }
         document.getElementById('btn-next').disabled = false;
     } catch (err) {
+        console.error('[runCriteriaEvaluation] Full error:', err);
+        console.error('[runCriteriaEvaluation] Body sent:', JSON.stringify(body, null, 2));
         el.innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
       <div class="font-bold text-red-700 mb-1">⚠️ Lỗi kết nối API</div>
-      <div class="text-sm text-red-600 mb-3">${err.message}</div>
+      <div class="text-sm text-red-600 mb-3 text-left break-all">${err.message}</div>
       <button class="bg-red-500 text-white px-4 py-1.5 rounded-lg text-sm font-bold" onclick="runCriteriaEvaluation()">↺ Thử lại</button>
     </div>`;
         document.getElementById('btn-next').disabled = false;

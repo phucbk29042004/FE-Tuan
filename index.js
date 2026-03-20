@@ -428,14 +428,25 @@ let activeTabIndicator = 0;
 async function runRanking() {
     activeTabIndicator = 0; // Default to first tab
 
-    const count = 3;
-    const names = [DEFAULT_ALTS[0], DEFAULT_ALTS[1], DEFAULT_ALTS[2]];
+    // Lấy dữ liệu động từ kết quả Bước 4 (criteriaEvalData)
+    if (!criteriaEvalData || criteriaEvalData.length === 0) {
+        document.getElementById('ranking-result').innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+      <div class="font-bold text-red-700 mb-1">⚠️ Thiếu dữ liệu đánh giá</div>
+      <div class="text-sm text-red-600">Vui lòng quay lại Bước 4 để tải dữ liệu đánh giá tiêu chí.</div>
+    </div>`;
+        document.getElementById('btn-next').disabled = false;
+        return;
+    }
+
+    // Lấy tên điện thoại từ tab đầu tiên của Bước 4
+    const firstTab = criteriaEvalData[0];
+    const names = firstTab.locations_header.map(h => h.name);
+    const count = names.length;
+
+    // Tạo bảng điểm: mỗi hàng là một điện thoại, mỗi cột là local_weight theo từng tiêu chí
     const scores = [];
     for (let a = 0; a < count; a++) {
-        const row = [];
-        for (let c = 0; c < 6; c++) { // Assuming 6 criteria for scores, adjust if dynamic
-            row.push(DEFAULT_SCORES[a][c]);
-        }
+        const row = criteriaEvalData.map(tab => tab.local_weights[a] ?? 0);
         scores.push(row);
     }
 

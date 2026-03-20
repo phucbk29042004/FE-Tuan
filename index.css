@@ -225,6 +225,9 @@
     font-size: 12px;
     padding: 6px 10px;
     border-color: #1230a0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .mx-tbl thead th.mx-th-label {
@@ -232,6 +235,9 @@
     text-align: left;
     padding-left: 12px;
     min-width: 72px;
+    position: sticky;
+    left: 0;
+    z-index: 12;
 }
 
 .mx-tbl td.mx-row-label {
@@ -242,6 +248,9 @@
     padding: 0 10px;
     text-align: left;
     border-right: 2px solid #93c5fd;
+    position: sticky;
+    left: 0;
+    z-index: 11;
 }
 
 .mx-tbl tbody tr:nth-child(odd) td {
@@ -314,6 +323,9 @@
     background: #fef08a !important;
     color: #78350f;
     border-right-color: #fbbf24;
+    position: sticky;
+    left: 0;
+    z-index: 11;
 }
 
 /* ════════════════════════════════════
